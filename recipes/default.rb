@@ -19,6 +19,6 @@
 # Search for our private ntp servers
 include_recipe 'et_ntp::discover'
 
-node.default['ntp']['servers'] = @pool
+node.default['ntp']['servers'] = node['et_ntp']['pool']
 
 include_recipe 'ntp::default'
