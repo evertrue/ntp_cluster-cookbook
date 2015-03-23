@@ -1,5 +1,7 @@
 # et_ntp-cookbook
 
+[![Build Status](https://travis-ci.com/evertrue/et_ntp-cookbook.svg)](https://travis-ci.com/evertrue/et_ntp-cookbook)
+
 Provides automated discovery and configuration of a private ntp pool via chef.
 
 ## Supported Platforms
