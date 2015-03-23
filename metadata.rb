@@ -10,3 +10,4 @@ supports 'ubuntu', '~> 14.04'
 supports 'ubuntu', '~> 12.04'
 
 depends 'ntp', '~> 1.7'
+depends 'apt'

@@ -17,8 +17,10 @@
 # limitations under the License.
 
 # Search for our private ntp servers
+
+include_recipe 'apt'
 include_recipe 'et_ntp::discover'
 
-node.default['ntp']['servers'] = node['et_ntp']['pool']
+node.default['ntp']['servers'] = node['et_ntp']['pool'] unless node['et_ntp']['pool'].empty?
 
 include_recipe 'ntp::default'
