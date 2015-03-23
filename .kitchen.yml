@@ -14,3 +14,7 @@ suites:
     run_list:
       - recipe[et_ntp::default]
     attributes:
+  - name: server
+    run_list:
+      - recipe[et_ntp::server]
+    attributes:

@@ -3,7 +3,9 @@ require 'spec_helper'
 describe 'et_ntp::default' do
   context 'installs /etc/ntp.conf' do
     describe file '/etc/ntp.conf' do
-      its(:content) { is_expected.to match(/restrict/) }
+      its(:content) { is_expected.to match(/server _default-ntp-1b\.priv\.evertrue\.com/) }
+      its(:content) { is_expected.to match(/server _default-ntp-1c\.priv\.evertrue\.com/) }
+      its(:content) { is_expected.to_not match(/\npeer/) }
     end
   end
 
