@@ -21,9 +21,8 @@
 include_recipe 'apt'
 include_recipe 'et_ntp::discover'
 
-unless node['et_ntp']['pool'].empty? or node['et_ntp']['pool'].include?(node['fqdn'])
+unless node['et_ntp']['pool'].empty? || node['et_ntp']['pool'].include?(node['fqdn'])
   node.default['ntp']['servers'] = node['et_ntp']['pool']
 end
-
 
 include_recipe 'ntp::default'
