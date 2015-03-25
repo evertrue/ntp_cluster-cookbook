@@ -15,6 +15,6 @@ node['network']['interfaces'].each do |_interface, config|
   end
 end
 
-node.set['ntp']['restrictions'] = node['ntp']['restrictions'].concat(restrictions).uniq
+node.set['ntp']['restrictions'] = node['ntp']['restrictions'].concat(restrictions)
 
 include_recipe 'ntp::default'
