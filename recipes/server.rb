@@ -1,10 +1,6 @@
-include_recipe 'apt'
-include_recipe 'et_ntp::discover'
-
-node.set['ntp']['peers'] = node['et_ntp']['pool'] unless node['et_ntp']['pool'].empty?
-
 restrictions = []
 
+# Open up the interfaces to the network
 node['network']['interfaces'].each do |_interface, config|
   config['addresses'].each do |address, details|
     if details['family'] == 'inet'
@@ -16,5 +12,3 @@ node['network']['interfaces'].each do |_interface, config|
 end
 
 node.set['ntp']['restrictions'] = node['ntp']['restrictions'].concat(restrictions).uniq
-
-include_recipe 'ntp::default'
