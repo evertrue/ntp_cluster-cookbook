@@ -1,11 +1,11 @@
 #! /bin/bash
 
-if [ `ntpq -p | grep -F "*<%= node['et_ntp']['master'] %>"` ]; then
-exit 1
+if ntpq -p | egrep -v "\*<%= node['et_ntp']['master'] %>"; then
+  exit 1
 fi
 
 <% node['et_ntp']['standbys'].each do |standby| %>
-if [ `ntpq -p | egrep "(\+|\#)<%= standby %>"` ]; then
+if ntpq -p | egrep -v "(\+|\#)<%= standby %>"; then
   exit 1
 fi
 <% end %>
