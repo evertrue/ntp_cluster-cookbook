@@ -2,7 +2,6 @@
   "name": "_default-ntp-1b",
   "chef_environment": "_default",
   "run_list": [
-    "recipe[et_base]",
     "role[ntp_server]"
   ],
   "automatic": {
@@ -16,7 +15,6 @@
       "userdata":null
     },
     "recipes": [
-      "et_base"
     ],
     "roles": [
       "ntp_server"
