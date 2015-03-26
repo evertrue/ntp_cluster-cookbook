@@ -18,6 +18,11 @@
     ],
     "roles": [
       "ntp_server"
-    ]
+    ],
+    "normal": {
+      "tags": [
+        "ntp_master"
+      ]
+    }
   }
 }

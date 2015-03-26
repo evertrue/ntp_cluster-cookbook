@@ -8,3 +8,6 @@ default['ntp']['servers'] = [
   '2.amazon.pool.ntp.org iburst',
   '3.amazon.pool.ntp.org iburst'
 ]
+
+default['et_ntp']['master'] = ''
+default['et_ntp']['master_tag'] = 'ntp_master'
