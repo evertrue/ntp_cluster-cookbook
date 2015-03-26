@@ -3,7 +3,7 @@ template "#{node['et_ntp']['monitor']['install_dir']}/ntpcheck" do
   source 'ntpcheck.erb'
   owner 'root'
   group 'root'
-  mode '0644'
+  mode '0774'
 end
 
 command = "#{node['et_ntp']['monitor']['run']}; " \
