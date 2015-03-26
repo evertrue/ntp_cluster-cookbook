@@ -12,3 +12,5 @@ node['network']['interfaces'].each do |_interface, config|
 end
 
 node.set['ntp']['restrictions'] = node['ntp']['restrictions'].concat(restrictions).uniq
+
+include_recipe 'et_ntp::monitor' if node['et_ntp']['monitor']['enabled']
