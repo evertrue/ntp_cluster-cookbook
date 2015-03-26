@@ -21,8 +21,13 @@
 include_recipe 'apt'
 include_recipe 'et_ntp::discover'
 
-unless node['et_ntp']['pool'].empty? || node['et_ntp']['pool'].include?(node['fqdn'])
-  node.default['ntp']['servers'] = node['et_ntp']['pool']
-end
+is_master = node['et_ntp']['master'] == node['fqdn']
+is_standby = node['et_ntp']['standbys'].include? node['fqdn']
+
+include_recipe 'et_ntp::master' if is_master
+
+include_recipe 'et_ntp::standby' if is_standby
+
+include_recipe 'et_ntp::client' if !is_master && !is_standby
 
 include_recipe 'ntp::default'
