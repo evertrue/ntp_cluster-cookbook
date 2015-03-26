@@ -16,18 +16,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Search for our private ntp servers
-
 include_recipe 'apt'
 include_recipe 'et_ntp::discover'
 
 is_master = node['et_ntp']['master'] == node['fqdn']
-is_standby = node['et_ntp']['standbys'].include? node['fqdn']
+is_server = node.role? node['et_ntp']['server_role']
 
 include_recipe 'et_ntp::master' if is_master
 
-include_recipe 'et_ntp::standby' if is_standby
+include_recipe 'et_ntp::standby' if is_server && !is_master
 
-include_recipe 'et_ntp::client' if !is_master && !is_standby
+include_recipe 'et_ntp::client' unless is_server
 
 include_recipe 'ntp::default'
