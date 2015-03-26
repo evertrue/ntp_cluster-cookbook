@@ -1,13 +1,5 @@
-default['et_ntp']['discovery'] = 'role:ntp_server'
-
-default['et_ntp']['pool'] = []
-
-default['ntp']['servers'] = [
-  '0.amazon.pool.ntp.org iburst',
-  '1.amazon.pool.ntp.org iburst',
-  '2.amazon.pool.ntp.org iburst',
-  '3.amazon.pool.ntp.org iburst'
-]
+default['et_ntp']['discovery'] = "role:#{node['et_ntp']['server_role']}"
 
 default['et_ntp']['master'] = ''
+
 default['et_ntp']['master_tag'] = 'ntp_master'
