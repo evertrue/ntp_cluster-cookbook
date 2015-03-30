@@ -16,7 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-discover = node['ntp_cluster']['discovery'] + " AND chef_environment:#{node.chef_environment}"
+discover = "#{node['ntp_cluster']['discovery']} AND chef_environment:#{node.chef_environment}"
 pool = search(
   :node,
   discover
@@ -49,7 +49,6 @@ if masters.length > 1
   # Go through each of the nodes tagged as masters to see if we are an offending node and should
   # become a standby node
   masters.each do |master|
-    puts 'bleah' + master
     log(" * #{master} is listed as a master")
     # In a multi-master situation, the master we look to will be the server with the highest fqdn
     node.default['ntp_cluster']['master'] = node['fqdn'] if node['fqdn'] > node['ntp_cluster']['master']
@@ -69,9 +68,10 @@ if masters.length > 1
     # Ensure that the tag was removed.  If not then fail.
     if node['tags'].include? 'ntp_master'
       fail '  > You are overriding me! Please check your overrides for the ntp_cluster/master/enabled attribute'
-    else
-      log "  > Chef has demoted #{node['fqdn']} to a standby node\n"
     end
+
+    log "  > Chef has demoted #{node['fqdn']} to a standby node\n"
+
     # Add this server to our list of standbys and remove it from our list of masters
     standbys << node['fqdn']
     masters.delete node['fqdn']
