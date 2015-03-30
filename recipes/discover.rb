@@ -32,12 +32,12 @@ if masters.length > 1
   # become a standby node
   masters.each do |master|
     puts 'bleah' + master
-    log(" * #{master['fqdn']} (#{master['ipaddess']}) is listed as a master")
+    log(" * #{master} is listed as a master")
     # In a multi-master situation, the master we look to will be the server with the highest fqdn
     node.default['et_ntp']['master'] = node['fqdn'] if node['fqdn'] > node['et_ntp']['master']
 
     # However, If one of the multiple masters is this node, then we will demote this node
-    next unless master['fqdn'] == node['fqdn']
+    next unless master == node['fqdn'] && node['fqdn']
 
     log(
       "  > #{node['fqdn']} is the node that this chef client is currently running on." \
@@ -62,7 +62,7 @@ if masters.length > 1
     next unless masters.length == 1
 
     node.default['et_ntp']['master'] = masters.first
-
+    standbys.delete masters.first
     # We have a vaild master setup now do not continue
     break
   end
@@ -78,7 +78,7 @@ else
   node.default['et_ntp']['master'] = node['fqdn']
 end
 
-node.default['et_ntp']['standbys'] = standbys
+node.default['et_ntp']['standbys'] = standbys.compact
 
 log 'Node Discovery Done'
 log node['tags'].inspect
