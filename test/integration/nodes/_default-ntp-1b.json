@@ -14,15 +14,15 @@
       "placement_availability_zone":"us-east-1b",
       "userdata":null
     },
+    "tags": [
+        "ntp_master"
+    ],
     "recipes": [
     ],
     "roles": [
       "ntp_server"
     ],
     "normal": {
-      "tags": [
-        "ntp_master"
-      ]
     }
   }
 }
