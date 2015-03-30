@@ -16,18 +16,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-restrictions = []
-
 # Open up the interfaces to the network
-node['network']['interfaces'].each do |_interface, config|
+restrictions = node['network']['interfaces'].each_with_object do |(_interface, config), r|
   config['addresses'].each do |address, details|
+    cmd = "#{address} mask #{details['netmask']} nomodify notrap"
+    r << (
     if details['family'] == 'inet'
-      restrictions << "#{address} mask #{details['netmask']} nomodify notrap"
+      cmd
     elsif details['family'] == 'inet6'
-      restrictions << "-6 #{address} mask #{details['netmask']} nomodify notrap"
-    end
+      "-6 #{cmd}"
+    end)
   end
-end
+end.compact
 
 node.set['ntp']['restrictions'] = node['ntp']['restrictions'].concat(restrictions).uniq
 
