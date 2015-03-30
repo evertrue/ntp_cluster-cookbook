@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: et_ntp
+# Cookbook Name:: ntp_cluster
 # Recipe:: default
 #
 # Copyright 2015 EverTrue, Inc.
@@ -17,15 +17,15 @@
 # limitations under the License.
 
 include_recipe 'apt'
-include_recipe 'et_ntp::discover'
+include_recipe 'ntp_cluster::discover'
 
-is_master = node['et_ntp']['master'] == node['fqdn']
-is_server = node.role? node['et_ntp']['server_role']
+is_master = node['ntp_cluster']['master'] == node['fqdn']
+is_server = node.role? node['ntp_cluster']['server_role']
 
-include_recipe 'et_ntp::master' if is_master
+include_recipe 'ntp_cluster::master' if is_master
 
-include_recipe 'et_ntp::standby' if is_server && !is_master
+include_recipe 'ntp_cluster::standby' if is_server && !is_master
 
-include_recipe 'et_ntp::client' unless is_server
+include_recipe 'ntp_cluster::client' unless is_server
 
 include_recipe 'ntp::default'

@@ -3,7 +3,7 @@
   "description": "NTP Server Role to run this as an NTP Server",
   "json_class": "Chef::Role",
   "default_attributes": {
-    "et_ntp": {
+    "ntp_cluster": {
       "monitor": {
         "enabled": true
       }
@@ -13,7 +13,7 @@
   },
   "chef_type": "role",
   "run_list": [
-    "recipe[et_ntp::server]"
+    "recipe[ntp_cluster::server]"
   ],
   "env_run_lists": {
   }

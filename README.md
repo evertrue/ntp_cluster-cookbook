@@ -1,6 +1,6 @@
-# et_ntp-cookbook
+# ntp_cluster-cookbook
 
-[![Build Status](https://travis-ci.com/evertrue/et_ntp-cookbook.svg)](https://travis-ci.com/evertrue/et_ntp-cookbook)
+[![Build Status](https://travis-ci.com/evertrue/ntp_cluster-cookbook.svg)](https://travis-ci.com/evertrue/ntp_cluster-cookbook)
 
 Provides automated discovery and configuration of a private ntp pool via chef.
 
@@ -10,7 +10,7 @@ This cookbook will automagically assign master and standby nodes in the cluster.
 The only thing you have to have is a role named `ntp_server` and assign that role
 to the node that you want to be part of the ntp cluster
 
-This role should be the same role used in the `['et_ntp']['discovery']` search string.
+This role should be the same role used in the `['ntp_cluster']['discovery']` search string.
 And should not need to add to the run list or attributes.
 
 You should NOT use any of the extra recipes in this cookbook, just use the default
@@ -52,7 +52,7 @@ It is highly recommended that you set the `['ntp']['servers']` to a pool better 
     <th>Default</th>
   </tr>
   <tr>
-    <td><tt>['et_ntp']['discovery']</tt></td>
+    <td><tt>['ntp_cluster']['discovery']</tt></td>
     <td>String</td>
     <td>The Chef Search query to find ntp servers</td>
     <td><tt>role:ntp_server</tt></td>
@@ -61,14 +61,14 @@ It is highly recommended that you set the `['ntp']['servers']` to a pool better 
 
 ## Usage
 
-### et_ntp::default
+### ntp_cluster::default
 
-Include `et_ntp` in your node's `run_list`:
+Include `ntp_cluster` in your node's `run_list`:
 
 ```json
 {
   "run_list": [
-    "recipe[et_ntp::default]"
+    "recipe[ntp_cluster::default]"
   ]
 }
 ```

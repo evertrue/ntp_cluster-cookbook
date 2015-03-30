@@ -12,10 +12,10 @@ platforms:
 suites:
   - name: default
     run_list:
-      - recipe[et_ntp::default]
+      - recipe[ntp_cluster::default]
     attributes:
   - name: server
     run_list:
       - role[ntp_server]
-      - recipe[et_ntp::default]
+      - recipe[ntp_cluster::default]
     attributes:

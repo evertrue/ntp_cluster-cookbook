@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'et_ntp::server' do
+describe 'ntp_cluster::server' do
   context 'installs /etc/ntp.conf' do
     describe file '/etc/ntp.conf' do
       its(:content) { is_expected.to match(/^server _default-ntp-1b\.priv\.evertrue\.com/) }

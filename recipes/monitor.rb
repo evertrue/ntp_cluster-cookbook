@@ -1,14 +1,31 @@
+#
+# Cookbook Name:: ntp_cluster
+# Recipe:: default
+#
+# Copyright 2015 EverTrue, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
-template "#{node['et_ntp']['monitor']['install_dir']}/ntpcheck" do
+template "#{node['ntp_cluster']['monitor']['install_dir']}/ntpcheck" do
   source 'ntpcheck.erb'
   owner 'root'
   group 'root'
   mode '0774'
 end
 
-command = "#{node['et_ntp']['monitor']['run']}; " \
-          "( #{node['et_ntp']['monitor']['install_dir']} && #{node['et_ntp']['monitor']['complete']} ) " \
-          "|| #{node['et_ntp']['monitor']['fail']}"
+command = "#{node['ntp_cluster']['monitor']['run']}; " \
+          "( #{node['ntp_cluster']['monitor']['install_dir']} && #{node['ntp_cluster']['monitor']['complete']} ) " \
+          "|| #{node['ntp_cluster']['monitor']['fail']}"
 
 cron 'ping the an endpoint if there is a problem' do
   hour '*'

@@ -1,6 +1,6 @@
-default['et_ntp']['server_role'] = 'ntp_server'
+default['ntp_cluster']['server_role'] = 'ntp_server'
 
-default['et_ntp']['pool'] = []
+default['ntp_cluster']['pool'] = []
 
 default['ntp']['servers'] = [
   '0.amazon.pool.ntp.org iburst',

@@ -1,7 +1,7 @@
-default['et_ntp']['monitor']['enabled'] = false
+default['ntp_cluster']['monitor']['enabled'] = false
 
-default['et_ntp']['monitor']['begin'] = 'true'
-default['et_ntp']['monitor']['complete'] = 'true'
-default['et_ntp']['monitor']['fail'] = 'false'
+default['ntp_cluster']['monitor']['begin'] = 'true'
+default['ntp_cluster']['monitor']['complete'] = 'true'
+default['ntp_cluster']['monitor']['fail'] = 'false'
 
-default['et_ntp']['monitor']['install_dir'] = '/usr/bin'
+default['ntp_cluster']['monitor']['install_dir'] = '/usr/bin'

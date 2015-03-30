@@ -1,5 +1,5 @@
-default['et_ntp']['discovery'] = "role:#{node['et_ntp']['server_role']}"
+default['ntp_cluster']['discovery'] = "role:#{node['ntp_cluster']['server_role']}"
 
-default['et_ntp']['master'] = ''
+default['ntp_cluster']['master'] = ''
 
-default['et_ntp']['master_tag'] = 'ntp_master'
+default['ntp_cluster']['master_tag'] = 'ntp_master'

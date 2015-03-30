@@ -1,3 +1,3 @@
 # 1.0.0
 
-Initial release of et_ntp
+Initial release of ntp_cluster
