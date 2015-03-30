@@ -14,12 +14,12 @@ end
 
 # Go through the pool and put the sandbys in the standbys list and masters in the masters list
 masters = pool.select do |n|
-  n['normal'] && n['normal']['tags'] && n['normal']['tags'].include?(node['et_ntp']['master_tag'])
+  n['tags'] && n['tags'].include?(node['et_ntp']['master_tag'])
 end
 
-masters = masters.map { |n| n['fqdn'] }
+masters = masters.map { |n| n['fqdn'] }.compact
 
-standbys = pool.map { |n| n['fqdn'] } - masters
+standbys = (pool.map { |n| n['fqdn'] } - masters).compact
 
 if masters.length > 1
   log(
