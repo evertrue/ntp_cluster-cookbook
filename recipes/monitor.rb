@@ -20,15 +20,16 @@ template "#{node['ntp_cluster']['monitor']['install_dir']}/ntpcheck" do
   source 'ntpcheck.erb'
   owner 'root'
   group 'root'
-  mode '0774'
+  mode '0755'
 end
 
-command = "#{node['ntp_cluster']['monitor']['run']}; " \
-          "( #{node['ntp_cluster']['monitor']['install_dir']} && #{node['ntp_cluster']['monitor']['complete']} ) " \
+command = "#{node['ntp_cluster']['monitor']['begin']}; " \
+          "( #{node['ntp_cluster']['monitor']['install_dir']}/ntpcheck " \
+          "&& #{node['ntp_cluster']['monitor']['complete']} ) " \
           "|| #{node['ntp_cluster']['monitor']['fail']}"
 
 cron 'ping the an endpoint if there is a problem' do
-  hour '*'
-  minute '*/5'
+  hour node['ntp_cluster']['monitor']['hour']
+  minute node['ntp_cluster']['monitor']['minute']
   command command
 end
