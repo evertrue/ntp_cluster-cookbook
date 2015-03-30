@@ -19,13 +19,20 @@
 include_recipe 'apt'
 include_recipe 'ntp_cluster::discover'
 
-is_master = node['ntp_cluster']['master'] == node['fqdn']
-is_server = node.role? node['ntp_cluster']['server_role']
+def master?
+  node['ntp_cluster']['master'] == node['fqdn']
+end
 
-include_recipe 'ntp_cluster::master' if is_master
+def server?
+  node.role? node['ntp_cluster']['server_role']
+end
 
-include_recipe 'ntp_cluster::standby' if is_server && !is_master
-
-include_recipe 'ntp_cluster::client' unless is_server
+if master?
+  include_recipe 'ntp_cluster::master'
+elsif server?
+  include_recipe 'ntp_cluster::standby'
+else
+  include_recipe 'ntp_cluster::client'
+end
 
 include_recipe 'ntp::default'
