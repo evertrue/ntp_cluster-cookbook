@@ -80,7 +80,6 @@ end
 
 node.default['et_ntp']['standbys'] = standbys.compact
 
-log 'Node Discovery Done'
-log node['tags'].inspect
-log node['et_ntp']['master'].inspect
-log node['et_ntp']['standbys'].inspect
+log " > Tags: #{node['tags'].inspect}"
+log " > Master Server: #{node['et_ntp']['master'].inspect}"
+log " > Standby Servers: #{node['et_ntp']['standbys'].inspect}"
