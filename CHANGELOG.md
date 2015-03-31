@@ -1,3 +1,7 @@
+# 1.0.1
+
+* Update Attribute precidence for ntp master, slave, and ntp cookbook settings
+
 # 1.0.0
 
 Initial release of ntp_cluster
