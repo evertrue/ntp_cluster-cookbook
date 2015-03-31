@@ -16,4 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+node.set['ntp']['servers'] = node['ntp_cluster']['public_servers']
+node.set['ntp']['peers'] = []
+
 include_recipe 'ntp_cluster::server'
