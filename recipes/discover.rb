@@ -63,19 +63,19 @@ if masters.length > 1
   end
 
   # by default in a multimaster env, the master is the node with the highest fqdn
-  node.default['ntp_cluster']['master'] = masters.max
+  node.set['ntp_cluster']['master'] = masters.max
 
 elsif masters.length == 1
   log 'Master is ' + masters.first
-  node.default['ntp_cluster']['master'] = masters.first
+  node.set['ntp_cluster']['master'] = masters.first
 else
   tags = node['tags'] || []
   node.normal['tags'] = tags.push(node['ntp_cluster']['master_tag']).uniq
 
-  node.default['ntp_cluster']['master'] = node['fqdn']
+  node.set['ntp_cluster']['master'] = node['fqdn']
 end
 
-node.default['ntp_cluster']['standbys'] = standbys.compact
+node.set['ntp_cluster']['standbys'] = standbys.compact
 
 log " > Tags: #{node['tags'].inspect}"
 log " > Master Server: #{node['ntp_cluster']['master'].inspect}"
