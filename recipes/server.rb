@@ -17,7 +17,7 @@
 # limitations under the License.
 
 # Open up the interfaces to the network
-restrictions = node['network']['interfaces'].each_with_object do |(_interface, config), r|
+restrictions = node['network']['interfaces'].each_with_object([]) do |(_interface, config), r|
   config['addresses'].each do |address, details|
     cmd = "#{address} mask #{details['netmask']} nomodify notrap"
     r << (
