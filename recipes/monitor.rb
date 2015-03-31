@@ -28,8 +28,11 @@ command = "#{node['ntp_cluster']['monitor']['begin']}; " \
           "&& #{node['ntp_cluster']['monitor']['complete']} ) " \
           "|| #{node['ntp_cluster']['monitor']['fail']}"
 
-cron 'ping the an endpoint if there is a problem' do
+# Please note that when you want to make changes to the command you should
+# Disable the cron job, converge everything to delete it, then edit the command and reenable
+cron 'ntpcheck cron job' do
   hour node['ntp_cluster']['monitor']['hour']
   minute node['ntp_cluster']['monitor']['minute']
   command command
+  action node['ntp_cluster']['monitor']['enabled'] ? :create : :delete
 end
