@@ -25,4 +25,10 @@ describe 'ntp_cluster::server' do
       its(:content) { is_expected.to match(/\(\\\+|\\\#\)_default-ntp-1d\.priv\.evertrue\.com/) }
     end
   end
+
+  context 'should have the monitor cron job' do
+    describe file '/etc/cron.d/ntpcheck' do
+      its(:content) { is_expected.to include('* * * * * root echo begin; ( /usr/bin/ntpcheck && echo success ) || echo fail') }
+    end
+  end
 end

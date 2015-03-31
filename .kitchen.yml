@@ -19,3 +19,9 @@ suites:
       - role[ntp_server]
       - recipe[ntp_cluster::default]
     attributes:
+      ntp_cluster:
+        monitor:
+          enabled: true
+          begin: echo begin
+          success: echo success
+          fail: echo fail

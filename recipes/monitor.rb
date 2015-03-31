@@ -25,12 +25,12 @@ end
 
 command = "#{node['ntp_cluster']['monitor']['begin']}; " \
           "( #{node['ntp_cluster']['monitor']['install_dir']}/ntpcheck " \
-          "&& #{node['ntp_cluster']['monitor']['complete']} ) " \
+          "&& #{node['ntp_cluster']['monitor']['success']} ) " \
           "|| #{node['ntp_cluster']['monitor']['fail']}"
 
 # Please note that when you want to make changes to the command you should
 # Disable the cron job, converge everything to delete it, then edit the command and reenable
-cron 'ntpcheck cron job' do
+cron_d 'ntpcheck' do
   hour node['ntp_cluster']['monitor']['hour']
   minute node['ntp_cluster']['monitor']['minute']
   command command
