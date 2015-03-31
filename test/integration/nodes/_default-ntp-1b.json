@@ -1,0 +1,28 @@
+{
+  "name": "_default-ntp-1b",
+  "chef_environment": "_default",
+  "run_list": [
+    "role[ntp_server]"
+  ],
+  "automatic": {
+    "fqdn": "_default-ntp-1b.priv.evertrue.com",
+    "ipaddress": "169.254.0.1",
+    "ec2": {
+      "hostname":"_default-ntp-1b.priv.evertrue.com",
+      "local_hostname":"_default-ntp-1b.priv.evertrue.com",
+      "local_ipv4":"169.254.0.1",
+      "placement_availability_zone":"us-east-1b",
+      "userdata":null
+    },
+    "tags": [
+        "ntp_master"
+    ],
+    "recipes": [
+    ],
+    "roles": [
+      "ntp_server"
+    ],
+    "normal": {
+    }
+  }
+}

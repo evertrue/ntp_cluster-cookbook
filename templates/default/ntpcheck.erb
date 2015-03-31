@@ -1,0 +1,13 @@
+#! /bin/bash
+
+if ntpq -p | egrep -v "\*<%= node['ntp_cluster']['master'] %>"; then
+  exit 1
+fi
+
+<% node['ntp_cluster']['standbys'].each do |standby| %>
+if ntpq -p | egrep -v "(\+|\#)<%= standby %>"; then
+  exit 1
+fi
+<% end %>
+
+exit 0

@@ -1,6 +1,99 @@
-# et_ntp-cookbook
+# ntp_cluster-cookbook
+
+[![Build Status](https://travis-ci.com/evertrue/ntp_cluster-cookbook.svg)](https://travis-ci.com/evertrue/ntp_cluster-cookbook)
 
 Provides automated discovery and configuration of a private ntp pool via chef.
+
+## Usage
+
+This cookbook will automagically assign master and standby nodes in the cluster.
+The only thing you have to have is a role named `ntp_server` and assign that role
+to the node that you want to be part of the ntp cluster
+
+This role should be the same role used in the `['ntp_cluster']['discovery']` search string.
+And should not need to add to the run list or attributes.
+
+You should NOT use any of the extra recipes in this cookbook, just use the default
+recipe as it will take care of all the chef magic.
+
+## Concepts
+
+The concept behind this type of NTP Cluster is to have a cluster that is consistent enough to
+run time sensitive distributed applications like cassandra where nodes in the application cluster
+needs to be completely in sync with each other (read microseconds) and reasonably close to wall clock time < 50ms.
+To acomplish this a single *true* time server (master) is synced with the outside world. All application servers
+sync with this server (or its standby standbys in the event of failure). This ensures that all the
+application servers are obtaining their time from the exact same source, whereas with a public pool
+you are getting time from different servers all the time.
+
+Standby servers are used for when a failure in the master occurs.  If the master fails, clients will
+sync with the standby servers which will maintain their understanding of time with each other using
+peered timekeeping.
+
+If the master node is completely removed from the cluster (delete node from chef-server) then a standby server is
+promoted to master and given the external server list to sync with, all remaining standby servers will pull their
+times directly from the promoted standby.
+
+It is highly recommended that you set the `['ntp']['servers']` to a pool better than the
+[ntp](https://github.com/gmiranda23/ntp) cookbook's default pool.
+
+## Commissioning a new cluster
+
+To commision a new cluster you must be patient. This is time, it moves slowly. Understand that first.  Second, NTP is a very redundant
+and methodical protocol. The worst thing you can do is rush this process because there are a lot of slow moving parts (NTP, DNS, Chef).
+
+1. Provision a box with the `ntp_cluster` recipe.  This box will immediately become a master and start syncing its time
+2. Wait an hour and then verify that the master's clock is correct.  Waiting allows both NTP to sync its time, DNS to propogate,
+and chef to runs some extra convergences
+3. Provision all your standby servers. This can happen in bulk.
+4. Wait another hour for the standby layer to sync up.
+5. Verify that the cluster is configured properly by checking the `server` and `peer` directives in `/etc/ntp.conf`
+5. Enable `ntp_server` for all of your application servers. They will immediately start looking to the new cluster for time. If
+the time it vastly off by 100ms or more then they WILL jump.  Be aware of the dangers of time jumps.
+
+## Commitioning Servers
+
+## Master Server
+
+Master servers should not be commitioned directly.  They should be promoted from existing slaves as the clock is already in sync
+
+## Standby Server
+
+1. Create the server and apply the `ntp_cluster` cookbook to it.
+2. Converge the server.
+3. Verify that `/etc/ntp.conf` is configured to peer with the standbys and have the master as its only server
+
+## Decommisioning Servers
+
+### Master Server
+
+1. Delete the node and client from the chef-server.
+2. Converge 1 of your standby servers so that it will promote itself to master
+3. Verify that the new master has been selected by performing `knife search 'tags:ntp_master'`
+4. Converge the rest of your standbys
+5. Converge all of your servers so that they stop looking to the old master
+6. Burn down the old master
+
+### Standby Server
+
+1. Delete the node and client from the chef-server.
+2. Converge all of your other standbys so that they stop looking to that standby server
+2. Converge all of your application servers so that they stop looking to that standby server
+3. Burn down the box
+
+### Client
+
+1. Just burn it down
+
+## Replacing Servers
+
+### Master Server
+
+You should follow the decommisioning of a master server proccess above and then provision a new **standby**
+
+### Standby Server
+
+Follow the decommisioning of a standby server then commission a new standby
 
 ## Supported Platforms
 
@@ -17,7 +110,7 @@ Provides automated discovery and configuration of a private ntp pool via chef.
     <th>Default</th>
   </tr>
   <tr>
-    <td><tt>['et_ntp']['discovery']</tt></td>
+    <td><tt>['ntp_cluster']['discovery']</tt></td>
     <td>String</td>
     <td>The Chef Search query to find ntp servers</td>
     <td><tt>role:ntp_server</tt></td>
@@ -26,16 +119,12 @@ Provides automated discovery and configuration of a private ntp pool via chef.
 
 ## Usage
 
-### et_ntp::default
+### ntp_cluster::default
 
-Include `et_ntp` in your node's `run_list`:
+Include this recipe in a wrapper cookbook:
 
-```json
-{
-  "run_list": [
-    "recipe[et_ntp::default]"
-  ]
-}
+```ruby
+depends 'ntp_cluster', '~> 1.0'
 ```
 
 ## License and Authors

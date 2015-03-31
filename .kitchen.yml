@@ -3,7 +3,7 @@ driver:
   name: vagrant
 
 provisioner:
-  name: chef_solo
+  name: chef_zero
 
 platforms:
   - name: ubuntu-12.04
@@ -12,5 +12,16 @@ platforms:
 suites:
   - name: default
     run_list:
-      - recipe[et_ntp::default]
+      - recipe[ntp_cluster::default]
     attributes:
+  - name: server
+    run_list:
+      - role[ntp_server]
+      - recipe[ntp_cluster::default]
+    attributes:
+      ntp_cluster:
+        monitor:
+          enabled: true
+          begin: echo begin
+          success: echo success
+          fail: echo fail

@@ -16,23 +16,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-include_recipe 'apt'
-include_recipe 'ntp_cluster::discover'
+node.set['ntp']['servers'] = [
+  node['ntp_cluster']['master']
+]
+node.default['ntp']['server']['prefer'] = node['ntp_cluster']['master']
 
-def master?
-  node['ntp_cluster']['master'] == node['fqdn']
-end
+node.set['ntp']['peers'] = node['ntp_cluster']['standbys']
 
-def server?
-  node.role? node['ntp_cluster']['server_role']
-end
-
-if master?
-  include_recipe 'ntp_cluster::master'
-elsif server?
-  include_recipe 'ntp_cluster::standby'
-else
-  include_recipe 'ntp_cluster::client'
-end
-
-include_recipe 'ntp::default'
+include_recipe 'ntp_cluster::server'

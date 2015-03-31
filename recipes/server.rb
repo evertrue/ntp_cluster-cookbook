@@ -16,23 +16,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-include_recipe 'apt'
-include_recipe 'ntp_cluster::discover'
+# Open up the interfaces to the network
+restrictions = node['network']['interfaces'].each_with_object([]) do |(_interface, config), r|
+  config['addresses'].each do |address, details|
+    cmd = "#{address} mask #{details['netmask']} nomodify notrap"
+    r << (
+    if details['family'] == 'inet'
+      cmd
+    elsif details['family'] == 'inet6'
+      "-6 #{cmd}"
+    end)
+  end
+end.compact
 
-def master?
-  node['ntp_cluster']['master'] == node['fqdn']
-end
+node.set['ntp']['restrictions'] = node['ntp']['restrictions'].concat(restrictions).uniq
 
-def server?
-  node.role? node['ntp_cluster']['server_role']
-end
-
-if master?
-  include_recipe 'ntp_cluster::master'
-elsif server?
-  include_recipe 'ntp_cluster::standby'
-else
-  include_recipe 'ntp_cluster::client'
-end
-
-include_recipe 'ntp::default'
+include_recipe 'ntp_cluster::monitor' if node['ntp_cluster']['monitor']['enabled']
