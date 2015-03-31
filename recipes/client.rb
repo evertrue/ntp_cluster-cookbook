@@ -17,6 +17,6 @@
 # limitations under the License.
 
 unless node['ntp_cluster']['pool'].empty?
-  node.default['ntp']['servers'] = node['ntp_cluster']['pool']
-  node.default['ntp']['server']['prefer'] = node['ntp_cluster']['master']
+  node.set['ntp']['servers'] = node['ntp_cluster']['pool']
+  node.set['ntp']['server']['prefer'] = node['ntp_cluster']['master']
 end
