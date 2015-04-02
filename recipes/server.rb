@@ -31,4 +31,4 @@ end.compact
 
 node.set['ntp']['restrictions'] = node['ntp']['restrictions'].concat(restrictions).uniq
 
-include_recipe 'ntp_cluster::monitor' if node['ntp_cluster']['monitor']['enabled']
+include_recipe 'ntp_cluster::monitor'
