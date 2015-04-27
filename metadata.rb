@@ -2,7 +2,7 @@ name             'ntp_cluster'
 maintainer       'EverTrue, Inc.'
 maintainer_email 'devops@evertrue.com'
 license          'apache2'
-description      'Installs/Configures ntp_cluster'
+description      'Configures an HA and highly consistent NTP Cluster synced to wall clock time'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version          '1.0.3'
 
