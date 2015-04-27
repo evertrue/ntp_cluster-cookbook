@@ -1,5 +1,9 @@
 # 1.0.4
 
+* Documentation Updates
+ 
+# 1.0.3
+
 * Always run the monitor recipe so that cron job gets removed if monitor is disabled
 * Removed redundant iburst
 * Set ntp server pool to the default pool.ntp.org
