@@ -11,20 +11,19 @@ The only thing you have to have is a role named `ntp_server` and assign that rol
 to the node that you want to be part of the ntp cluster
 
 This role should be the same role used in the `['ntp_cluster']['discovery']` search string.
-And should not need to add to the run list or attributes.
 
 You should NOT use any of the extra recipes in this cookbook, just use the default
-recipe as it will take care of all the chef magic.
+recipe and the `ntp_server` role as it will take care of all the chef magic.
 
 ## Concepts
 
 The concept behind this type of NTP Cluster is to have a cluster that is consistent enough to
-run time sensitive distributed applications like cassandra where nodes in the application cluster
-needs to be completely in sync with each other (read microseconds) and reasonably close to wall clock time < 50ms.
-To acomplish this a single *true* time server (master) is synced with the outside world. All application servers
-sync with this server (or its standby standbys in the event of failure). This ensures that all the
-application servers are obtaining their time from the exact same source, whereas with a public pool
-you are getting time from different servers all the time.
+run time sensitive distributed applications like Cassandra where nodes in the application cluster
+needs to be completely in sync with each other (read microseconds) and reasonably close to wall clock time.
+To accomplish this a single *true* time server (master) is synced with the outside world. All application servers
+sync with this server (or its standbys in the event of failure). This ensures that all the
+application servers are obtaining their time from the exact same external source and are connected to a very
+low-latency low-demand internal server.
 
 Standby servers are used for when a failure in the master occurs.  If the master fails, clients will
 sync with the standby servers which will maintain their understanding of time with each other using
@@ -32,18 +31,18 @@ peered timekeeping.
 
 If the master node is completely removed from the cluster (delete node from chef-server) then a standby server is
 promoted to master and given the external server list to sync with, all remaining standby servers will pull their
-times directly from the promoted standby.
+times directly from the newly promoted standby.
 
-It is highly recommended that you set the `['ntp']['servers']` to a pool better than the
+It is highly recommended that you set the `['ntp_cluster']['public_servers']` to a pool better than the
 [ntp](https://github.com/gmiranda23/ntp) cookbook's default pool.
 
 ## Commissioning a new cluster
 
-To commision a new cluster you must be patient. This is time, it moves slowly. Understand that first.  Second, NTP is a very redundant
+To commission a new cluster you **must be patient**. This is time, it moves slowly. Understand that first.  Second, NTP is a very redundant
 and methodical protocol. The worst thing you can do is rush this process because there are a lot of slow moving parts (NTP, DNS, Chef).
 
 1. Provision a box with the `ntp_cluster` recipe.  This box will immediately become a master and start syncing its time
-2. Wait an hour and then verify that the master's clock is correct.  Waiting allows both NTP to sync its time, DNS to propogate,
+2. Wait an hour and then verify that the master's clock is correct.  Waiting allows both NTP to sync its time, DNS to propagate,
 and chef to runs some extra convergences
 3. Provision all your standby servers. This can happen in bulk.
 4. Wait another hour for the standby layer to sync up.
@@ -51,11 +50,20 @@ and chef to runs some extra convergences
 5. Enable `ntp_server` for all of your application servers. They will immediately start looking to the new cluster for time. If
 the time it vastly off by 100ms or more then they WILL jump.  Be aware of the dangers of time jumps.
 
-## Commitioning Servers
+
+### Debugging
+
+If there are problems commissioning a server check `/etc/ntp.conf` and use the `ntpq -p` command to show the connected servers and there statuses
+
+### Ports
+
+Lastly, NTP communicates on UDP port 123. Make sure that all of your server nodes are accepting UDP packets on port 123
+
+## Commissioning Servers
 
 ## Master Server
 
-Master servers should not be commitioned directly.  They should be promoted from existing slaves as the clock is already in sync
+Master servers should not be commissioned directly.  They should be promoted from existing slaves as the clock is already in sync
 
 ## Standby Server
 
@@ -63,7 +71,7 @@ Master servers should not be commitioned directly.  They should be promoted from
 2. Converge the server.
 3. Verify that `/etc/ntp.conf` is configured to peer with the standbys and have the master as its only server
 
-## Decommisioning Servers
+## Decommissioning Servers
 
 ### Master Server
 
@@ -89,11 +97,11 @@ Master servers should not be commitioned directly.  They should be promoted from
 
 ### Master Server
 
-You should follow the decommisioning of a master server proccess above and then provision a new **standby**
+You should follow the decommissioning of a master server process above and then provision a new **standby**
 
 ### Standby Server
 
-Follow the decommisioning of a standby server then commission a new standby
+Follow the decommissioning of a standby server then commission a new standby
 
 ## Supported Platforms
 
@@ -115,6 +123,12 @@ Follow the decommisioning of a standby server then commission a new standby
     <td>The Chef Search query to find ntp servers</td>
     <td><tt>role:ntp_server</tt></td>
   </tr>
+  <tr>
+    <td><tt>['ntp_cluster']['public_servers']</tt></td>
+    <td>Array</td>
+    <td>The List of external servers to sync with</td>
+    <td><tt>#.pool.ntp.org servers</tt></td>
+  </tr>
 </table>
 
 ## Usage
@@ -125,6 +139,12 @@ Include this recipe in a wrapper cookbook:
 
 ```ruby
 depends 'ntp_cluster', '~> 1.0'
+```
+
+And then in your wrapper cookbook
+
+```ruby
+include_recipe 'ntp_cluster::default'
 ```
 
 ## License and Authors
