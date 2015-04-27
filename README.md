@@ -1,6 +1,6 @@
 # ntp_cluster-cookbook
 
-[![Build Status](https://travis-ci.com/evertrue/ntp_cluster-cookbook.svg)](https://travis-ci.com/evertrue/ntp_cluster-cookbook)
+[![Build Status](https://travis-ci.org/evertrue/ntp_cluster-cookbook.svg)](https://travis-ci.org/evertrue/ntp_cluster-cookbook)
 
 Provides automated discovery and configuration of a private ntp pool via chef.
 
