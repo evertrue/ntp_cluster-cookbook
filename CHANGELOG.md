@@ -1,3 +1,7 @@
+# 1.0.6
+
+* Wrap cron monitor commands in quotes.
+
 # 1.0.5
 
 * Pipe stdout from the monitor script to logger to prevent root cron emails
