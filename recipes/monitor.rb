@@ -23,16 +23,15 @@ template "#{node['ntp_cluster']['monitor']['install_dir']}/ntpcheck" do
   mode '0755'
 end
 
-command = "#{node['ntp_cluster']['monitor']['begin']}; " \
-          "( #{node['ntp_cluster']['monitor']['install_dir']}/ntpcheck " \
-          "&& #{node['ntp_cluster']['monitor']['success']} ) " \
-          "|| #{node['ntp_cluster']['monitor']['fail']}"
-
 # Please note that when you want to make changes to the command you should
 # Disable the cron job, converge everything to delete it, then edit the command and reenable
 cron_d 'ntpcheck' do
   hour node['ntp_cluster']['monitor']['hour']
   minute node['ntp_cluster']['monitor']['minute']
-  command command
+  command "#{node['ntp_cluster']['monitor']['begin']}; " \
+          "( #{node['ntp_cluster']['monitor']['install_dir']}/ntpcheck " \
+          "&& #{node['ntp_cluster']['monitor']['success']} ) " \
+          "|| #{node['ntp_cluster']['monitor']['fail']} " \
+          "| logger -t ntpcheck -p cron.info"
   action node['ntp_cluster']['monitor']['enabled'] ? :create : :delete
 end
