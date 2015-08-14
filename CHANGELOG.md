@@ -1,7 +1,11 @@
+# 1.0.5
+
+* Pipe stdout from the monitor script to logger to prevent root cron emails
+
 # 1.0.4
 
 * Documentation Updates
- 
+
 # 1.0.3
 
 * Always run the monitor recipe so that cron job gets removed if monitor is disabled
