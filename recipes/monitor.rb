@@ -27,9 +27,8 @@ cron_d 'ntpcheck' do
   hour node['ntp_cluster']['monitor']['hour']
   minute node['ntp_cluster']['monitor']['minute']
   command "bash -c '#{node['ntp_cluster']['monitor']['begin']}; " \
-          "( #{node['ntp_cluster']['monitor']['install_dir']}/ntpcheck " \
-          "&& #{node['ntp_cluster']['monitor']['success']} ) " \
-          "|| #{node['ntp_cluster']['monitor']['fail']}' " \
+          "#{node['ntp_cluster']['monitor']['install_dir']}/ntpcheck " \
+          "&& #{node['ntp_cluster']['monitor']['success']} " \
           '| logger -t ntpcheck -p cron.info'
   action node['ntp_cluster']['monitor']['enabled'] ? :create : :delete
 end
