@@ -23,8 +23,6 @@ template "#{node['ntp_cluster']['monitor']['install_dir']}/ntpcheck" do
   mode '0755'
 end
 
-# Please note that when you want to make changes to the command you should
-# Disable the cron job, converge everything to delete it, then edit the command and reenable
 cron_d 'ntpcheck' do
   hour node['ntp_cluster']['monitor']['hour']
   minute node['ntp_cluster']['monitor']['minute']
