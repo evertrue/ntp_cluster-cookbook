@@ -1,3 +1,7 @@
+# 1.0.7
+
+* Remove erroneous fail state from ntpcheck cronjob
+
 # 1.0.6
 
 * Wrap cron monitor commands in quotes.
