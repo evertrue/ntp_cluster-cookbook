@@ -1,3 +1,8 @@
+# 1.0.8
+
+* Bring back `fail` state for Cronitor check
+    - The fail endpoint is a premium feature, so now it works
+
 # 1.0.7
 
 * Remove erroneous fail state from ntpcheck cronjob
