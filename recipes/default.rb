@@ -17,7 +17,7 @@
 # limitations under the License.
 
 include_recipe 'apt'
-include_recipe 'ntp_cluster::discover'
+include_recipe 'ntp_cluster::discover' if node['ntp_cluster']['discovery']
 
 def master?
   node['ntp_cluster']['master'] == node['fqdn']
