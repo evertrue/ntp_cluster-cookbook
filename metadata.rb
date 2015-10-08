@@ -6,7 +6,7 @@ description      'Configures an HA and highly consistent NTP Cluster synced to w
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version          '1.0.8'
 
-supports 'ubuntu', '>= 12.04'
+supports 'ubuntu', '>= 14.04'
 
 depends 'ntp', '~> 1.7'
 depends 'apt'
