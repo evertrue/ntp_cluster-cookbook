@@ -1,3 +1,9 @@
+# 1.1.0
+
+* Add verification that NTP pool is reachable
+* Make server discovery optional
+* Drop testing on Ubuntu 12.04
+
 # 1.0.8
 
 * Bring back `fail` state for Cronitor check
