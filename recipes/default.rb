@@ -36,3 +36,7 @@ else
 end
 
 include_recipe 'ntp::default'
+
+execute 'verify ntp pool connectivity' do
+  command '! /usr/bin/ntpq -p | grep "\.INIT\."'
+end
