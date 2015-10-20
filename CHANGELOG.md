@@ -1,3 +1,7 @@
+# 1.1.1
+
+* Add retry to `execute[verify ntp pool connectivity]` resource to prevent it from stopping an initial convergence
+
 # 1.1.0
 
 * Add verification that NTP pool is reachable
