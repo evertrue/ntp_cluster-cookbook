@@ -1,0 +1,46 @@
+---
+driver:
+  name: ec2
+  require_chef_omnibus: true
+  aws_ssh_key_id: <%= ENV['AWS_KEYPAIR_NAME'] %>
+  region: us-east-1
+  availability_zone: us-east-1e
+  security_group_ids:
+    - ci-testing
+  instance_type: c3.large
+  transport:
+    ssh_key: <%= ENV['EC2_SSH_KEY_PATH'] %>
+  tags:
+    Env: public
+    Type: test
+
+provisioner:
+  name: chef_zero
+
+platforms:
+  - name: ubuntu-14.04
+    driver_config:
+      image_id: ami-07e9bd62
+
+suites:
+  - name: default
+    driver_config:
+      tags:
+        Name: ntp_cluster-default-ubuntu-1404
+    run_list:
+      - recipe[ntp_cluster::default]
+
+  - name: server
+    driver_config:
+      tags:
+        Name: ntp_cluster-server-ubuntu-1404
+    run_list:
+      - role[ntp_server]
+      - recipe[ntp_cluster::default]
+    attributes:
+      ntp_cluster:
+        monitor:
+          enabled: true
+          begin: echo begin
+          success: echo success
+          fail: echo fail
