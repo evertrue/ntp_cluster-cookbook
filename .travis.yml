@@ -1,12 +1,26 @@
 language: ruby
-cache: bundler
-rvm:
-- 2.1
-bundler_args: "--without integration --retry 3"
+rvm: 2.2
+sudo: required
+cache:
+  directories:
+  - $HOME/.berkshelf
+addons:
+  apt:
+    sources:
+    - chef-stable-precise
+    packages:
+    - chefdk
+env:
+- CHEF_BIN=/opt/chefdk/bin
 before_script:
-- bundle exec berks
+- eval "$(${CHEF_BIN}/chef shell-init bash)"
+- "${CHEF_BIN}/berks"
+- "${CHEF_BIN}/chef --version"
+- "${CHEF_BIN}/rubocop --version"
+- "${CHEF_BIN}/foodcritic --version"
 script:
-- bundle exec rake travis
+- "${CHEF_BIN}/rubocop"
+- "${CHEF_BIN}/foodcritic ."
 notifications:
   slack:
     secure: "BAQINrDya9sAN0OBHkzwNaQj7NlJ8ebxIHbZGhtXgMfX2LAv9VcSMoJ99pssyXARuhwo3BRkTscAhTyrvekZci3WakeaolVhXvHVMdPp+JPKcle580K1kcwt5OVghHCc5nAc9s1aoCgFEyRSYVgQynaNjDWdEDRUbQe4xE028OI="
