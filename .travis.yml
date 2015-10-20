@@ -32,7 +32,7 @@ before_script:
 script:
 - "${CHEF_BIN}/rubocop"
 - "${CHEF_BIN}/foodcritic ."
-- "${CHEF_BIN}/kitchen -c"
+- "${CHEF_BIN}/kitchen test -c"
 notifications:
   slack:
     secure: BAQINrDya9sAN0OBHkzwNaQj7NlJ8ebxIHbZGhtXgMfX2LAv9VcSMoJ99pssyXARuhwo3BRkTscAhTyrvekZci3WakeaolVhXvHVMdPp+JPKcle580K1kcwt5OVghHCc5nAc9s1aoCgFEyRSYVgQynaNjDWdEDRUbQe4xE028OI=
