@@ -8,8 +8,7 @@ driver:
   security_group_ids:
     - ci-testing
   instance_type: c3.large
-  transport:
-    ssh_key: <%= ENV['EC2_SSH_KEY_PATH'] %>
+  ssh_key: <%= ENV['EC2_SSH_KEY_PATH'] %>
   tags:
     Env: public
     Type: test
