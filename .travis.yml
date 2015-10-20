@@ -12,9 +12,9 @@ addons:
     - chefdk
 env:
   matrix:
+  global:
   - CHEF_BIN=/opt/chefdk/bin
   - KITCHEN_YAML=.kitchen.cloud.yml
-  global:
   - secure: NZWqG4aOtcpAlzTW8IwlGXpuFydRooSDQYAgYh9ZOZq9v0o0F3Kkkl1YXAX4vTgw1n7HP0FzAXxE/5BWPxTmC3VrnYsij4q1t/CK5qXyUhGmdbczi5b19SAF1+ydY+ijROqYJQenFTRECWexV/E1GQJoBpsodqDw59tAwZ6/6+s=
   - secure: dXLiwjvBCw/ShnTjK2nKvxTFFLOUYKcoa+yIxYaSaYlsgrQSoxRNFmFoKT+oFFdGPy62YCxO4fTLYdpggMT2NWPN+yY1z7TtA0cmEtJg2gjyh8s0QzUnCDQ3MHNxmr/cSmr9ErSZtpUCTXWF8iLK8rvbz5dF3dF/vfANlxjfbB8=
 before_install:
