@@ -25,7 +25,7 @@ before_install:
 - mkdir ~/.chef
 - echo 'node_name "trubot"' >> ~/.chef/knife.rb
 - chmod 600 ~/.ssh/travis_ci_ec2.pem
-- ssh-add ~/.ssh/travis_ci_ec2.pem
+- echo $EC2_SSH_KEY_PATH
 install:
 - eval "$(${CHEF_BIN}/chef shell-init bash)"
 - "${CHEF_BIN}/chef gem install kitchen-ec2"
