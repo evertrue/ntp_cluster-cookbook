@@ -28,7 +28,12 @@ describe 'ntp_cluster::server' do
 
   context 'should have the monitor cron job' do
     describe file '/etc/cron.d/ntpcheck' do
-      its(:content) { is_expected.to include('* * * * * root echo begin; ( /usr/bin/ntpcheck && echo success ) || echo fail') }
+      its(:content) do
+        is_expected.to include(
+          "* * * * * root bash -c 'echo begin; ( /usr/bin/ntpcheck && echo success ) " \
+          "|| echo fail' | logger -t ntpcheck -p cron.info"
+        )
+      end
     end
   end
 end
