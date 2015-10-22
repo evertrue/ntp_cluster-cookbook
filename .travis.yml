@@ -40,4 +40,4 @@ script:
 - "${CHEF_BIN}/kitchen test ${INSTANCE} -d always"
 notifications:
   slack:
-    secure: BAQINrDya9sAN0OBHkzwNaQj7NlJ8ebxIHbZGhtXgMfX2LAv9VcSMoJ99pssyXARuhwo3BRkTscAhTyrvekZci3WakeaolVhXvHVMdPp+JPKcle580K1kcwt5OVghHCc5nAc9s1aoCgFEyRSYVgQynaNjDWdEDRUbQe4xE028OI=
+    secure: aguKV6w5WLcpARNWq5wIrV1A3x/YCX5DtwI1jMQPe1ne9zQg5+lmpGVPQ2N6GdQxUO4GJYTd6Cn/Jstq59S5uoPwr9daUJQOWJlLFEL5h57NOPUgf84V+9ZUkbIJ3blCQfzke4Tfjfa5LMMNQ/NQFsMGcEVQlXOT5riVbko2lfQ=
