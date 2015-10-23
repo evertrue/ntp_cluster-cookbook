@@ -1,3 +1,8 @@
+# 1.1.2
+
+* Bump retry grace period to a total of 60 seconds for verification
+* Restart ntp service immediately upon configuration changes
+
 # 1.1.1
 
 * Add retry to `execute[verify ntp pool connectivity]` resource to prevent it from stopping an initial convergence
