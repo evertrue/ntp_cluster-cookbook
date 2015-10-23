@@ -10,3 +10,4 @@ default['ntp_cluster']['public_servers'] = [
 ]
 
 set['ntp']['servers'] = node['ntp_cluster']['public_servers']
+set['ntp']['conf_restart_immediate'] = true

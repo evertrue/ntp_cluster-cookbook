@@ -39,5 +39,6 @@ include_recipe 'ntp::default'
 
 execute 'verify ntp pool connectivity' do
   command '! /usr/bin/ntpq -p | grep "\.INIT\."'
-  retries 5
+  retries 12
+  retry_delay 5
 end
