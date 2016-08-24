@@ -70,9 +70,10 @@ elsif masters.length == 1
   node.set['ntp_cluster']['master'] = masters.first
 else
   tags = node['tags'] || []
-  node.normal['tags'] = tags.push(node['ntp_cluster']['master_tag']).uniq
-
-  node.set['ntp_cluster']['master'] = node['fqdn']
+  if node.role?(node['ntp_cluster']['server_role'])
+    node.normal['tags'] = tags.push(node['ntp_cluster']['master_tag']).uniq 
+    node.set['ntp_cluster']['master'] = node['fqdn']
+  end
 end
 
 node.set['ntp_cluster']['standbys'] = standbys.compact
