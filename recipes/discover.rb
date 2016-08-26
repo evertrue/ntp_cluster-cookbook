@@ -58,7 +58,7 @@ if masters.length > 1
     node.normal['tags'] = node['tags'].reject { |t| t == node['ntp_cluster']['master_tag'] }.uniq
 
     if node['tags'].include? 'ntp_master'
-      fail '  > You are overriding me! Please check your overrides for tags attribute'
+      raise '  > You are overriding me! Please check your overrides for tags attribute'
     end
   end
 
@@ -71,7 +71,7 @@ elsif masters.length == 1
 else
   tags = node['tags'] || []
   if node.role?(node['ntp_cluster']['server_role'])
-    node.normal['tags'] = tags.push(node['ntp_cluster']['master_tag']).uniq 
+    node.normal['tags'] = tags.push(node['ntp_cluster']['master_tag']).uniq
     node.set['ntp_cluster']['master'] = node['fqdn']
   end
 end
