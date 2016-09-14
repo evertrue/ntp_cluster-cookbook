@@ -68,16 +68,18 @@ if masters.length > 1
 elsif masters.length == 1
   log 'Master is ' + masters.first
   node.set['ntp_cluster']['master'] = masters.first
-else
+
+elsif node.role?(node['ntp_cluster']['server_role'])
   tags = node['tags'] || []
-  if node.role?(node['ntp_cluster']['server_role'])
-    node.normal['tags'] = tags.push(node['ntp_cluster']['master_tag']).uniq
-    node.set['ntp_cluster']['master'] = node['fqdn']
-  end
+  node.normal['tags'] = tags.push(node['ntp_cluster']['master_tag']).uniq
+  node.set['ntp_cluster']['master'] = node['fqdn']
+
+else
+  Chef::Log.warn 'No servers detected.'
 end
 
 node.set['ntp_cluster']['standbys'] = standbys.compact
 
-Chef::Log.info " > Tags: #{node['tags'].inspect}"
+Chef::Log.warn " > Tags: #{node['tags'].inspect}"
 Chef::Log.info " > Master Server: #{node['ntp_cluster']['master'].inspect}"
 Chef::Log.info " > Standby Servers: #{node['ntp_cluster']['standbys'].inspect}"
