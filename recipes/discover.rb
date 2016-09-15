@@ -58,7 +58,7 @@ if masters.length > 1
     node.normal['tags'] = node['tags'].reject { |t| t == node['ntp_cluster']['master_tag'] }.uniq
 
     if node['tags'].include? 'ntp_master'
-      fail '  > You are overriding me! Please check your overrides for tags attribute'
+      raise '  > You are overriding me! Please check your overrides for tags attribute'
     end
   end
 
@@ -68,11 +68,12 @@ if masters.length > 1
 elsif masters.length == 1
   log 'Master is ' + masters.first
   node.set['ntp_cluster']['master'] = masters.first
-else
+elsif node.role?(node['ntp_cluster']['server_role'])
   tags = node['tags'] || []
   node.normal['tags'] = tags.push(node['ntp_cluster']['master_tag']).uniq
-
   node.set['ntp_cluster']['master'] = node['fqdn']
+else
+  Chef::Log.warn 'No servers detected.'
 end
 
 node.set['ntp_cluster']['standbys'] = standbys.compact
