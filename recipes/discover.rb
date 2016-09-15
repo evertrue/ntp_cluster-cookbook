@@ -80,6 +80,6 @@ end
 
 node.set['ntp_cluster']['standbys'] = standbys.compact
 
-Chef::Log.warn " > Tags: #{node['tags'].inspect}"
+Chef::Log.info " > Tags: #{node['tags'].inspect}"
 Chef::Log.info " > Master Server: #{node['ntp_cluster']['master'].inspect}"
 Chef::Log.info " > Standby Servers: #{node['ntp_cluster']['standbys'].inspect}"
