@@ -28,7 +28,7 @@ before_install:
 - cp ~/.ssh/travis_ci_ec2.pem ~/.ssh/id_rsa
 install:
 - eval "$(${CHEF_BIN}/chef shell-init bash)"
-- "${CHEF_BIN}/chef gem install kitchen-ec2"
+- "${CHEF_BIN}/chef gem install kitchen-ec2 kitchen-sync"
 - "${CHEF_BIN}/berks"
 before_script:
 - "${CHEF_BIN}/chef --version"
