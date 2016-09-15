@@ -1,5 +1,9 @@
 # ntp_cluster ChangeLog
 
+# 1.1.3
+
+* Add "ntp_master" tag only if the node is eligible for ntp servers (Contributor: [@akadoya](https://github.com/akadoya))
+
 # 1.1.2
 
 * Bump retry grace period to a total of 60 seconds for verification
