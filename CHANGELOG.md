@@ -1,3 +1,5 @@
+# ntp_cluster ChangeLog
+
 # 1.1.2
 
 * Bump retry grace period to a total of 60 seconds for verification
