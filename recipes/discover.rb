@@ -59,21 +59,21 @@ if master_nodes.length > 1
   end
 
   # by default in a multimaster env, the master is the node with the highest fqdn
-  node.set['ntp_cluster']['master'] = masters.max
+  node.override['ntp_cluster']['master'] = masters.max
 
 elsif masters.length == 1
   log 'Master is ' + masters.first
-  node.set['ntp_cluster']['master'] = masters.first
+  node.override['ntp_cluster']['master'] = masters.first
 elsif node.role?(node['ntp_cluster']['server_role'])
   Chef::Log.debug('Server pool contains no masters. Appointing myself.')
   tags = node['tags'] || []
   node.normal['tags'] = tags.push(node['ntp_cluster']['master_tag']).uniq
-  node.set['ntp_cluster']['master'] = node['fqdn']
+  node.override['ntp_cluster']['master'] = node['fqdn']
 else
   Chef::Log.warn 'No servers detected.'
 end
 
-node.set['ntp_cluster']['standbys'] = standbys.compact
+node.override['ntp_cluster']['standbys'] = standbys.compact
 
 Chef::Log.info " > Tags: #{node['tags'].inspect}"
 Chef::Log.info " > Master Server: #{node['ntp_cluster']['master'].inspect}"
