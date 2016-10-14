@@ -16,19 +16,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Open up the interfaces to the network
-restrictions = node['network']['interfaces'].each_with_object([]) do |(_interface, config), r|
-  config['addresses'].each do |address, details|
-    cmd = "#{address} mask #{details['netmask']} nomodify notrap"
-    r << (
-    if details['family'] == 'inet'
-      cmd
-    elsif details['family'] == 'inet6'
-      "-6 #{cmd}"
-    end)
-  end
-end.compact
 
-node.set['ntp']['restrictions'] = node['ntp']['restrictions'].concat(restrictions).uniq
+if node['tags'].include? node['ntp_cluster']['master_tag'] # master?
+  Chef::Log.debug 'NTP: Node is a master server'
+  node.override['ntp']['peers'] = []
+else # standby?
+  Chef::Log.debug 'NTP: Node is a standby server'
+  node.override['ntp']['servers'] = [node['ntp_cluster']['master']]
+  node.default['ntp']['server']['prefer'] = node['ntp_cluster']['master']
+  node.override['ntp']['peers'] = node['ntp_cluster']['standbys']
+end
+
+# Open up the interfaces to the network
+node.override['ntp']['restrictions'] = node['network']['interfaces'].map do |_interface, config|
+  config['addresses'].map do |address, details|
+    cmd = "#{address} mask #{details['netmask']} nomodify notrap"
+    case details['family']
+    when 'inet6'
+      "-6 #{cmd}"
+    when 'inet'
+      cmd
+    end
+  end
+end.flatten.compact.uniq
 
 include_recipe 'ntp_cluster::monitor'

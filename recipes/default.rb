@@ -19,18 +19,8 @@
 include_recipe 'apt'
 include_recipe 'ntp_cluster::discover' if node['ntp_cluster']['discovery']
 
-def master?
-  node['ntp_cluster']['master'] == node['fqdn']
-end
-
-def server?
-  node.role? node['ntp_cluster']['server_role']
-end
-
-if master?
-  include_recipe 'ntp_cluster::master'
-elsif server?
-  include_recipe 'ntp_cluster::standby'
+if node.role? node['ntp_cluster']['server_role'] # server?
+  include_recipe 'ntp_cluster::server'
 else
   include_recipe 'ntp_cluster::client'
 end
