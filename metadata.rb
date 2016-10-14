@@ -8,6 +8,6 @@ version          '1.1.3'
 
 supports 'ubuntu', '>= 14.04'
 
-depends 'ntp', '~> 1.7'
+depends 'ntp', '~> 3.0'
 depends 'apt'
 depends 'cron', '~> 1.6'
