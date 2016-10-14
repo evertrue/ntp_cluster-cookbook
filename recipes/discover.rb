@@ -24,7 +24,7 @@ pool = search(
 if pool.any?
   node.default['ntp_cluster']['pool'] = pool.map { |n| n['ipaddress'] }
 else
-  log "Could not find any private ntp servers using the search string: '#{discover}'"
+  log "Could not find any private ntp servers"
 end
 
 # Go through the pool and put the sandbys in the standbys list and masters in the masters list
