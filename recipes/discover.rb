@@ -69,7 +69,7 @@ else
   Chef::Log.warn 'No servers detected.'
 end
 
-node.override['ntp_cluster']['standbys'] = standbys.compact
+node.override['ntp_cluster']['standbys'] = standbys
 
 Chef::Log.info " > Tags: #{node['tags'].inspect}"
 Chef::Log.info " > Master Server: #{node['ntp_cluster']['master'].inspect}"
