@@ -10,4 +10,4 @@ supports 'ubuntu', '>= 14.04'
 
 depends 'ntp', '~> 3.0'
 depends 'apt'
-depends 'cron', '~> 1.6'
+depends 'cron', '~> 3.0'
