@@ -3,8 +3,8 @@ require 'spec_helper'
 describe 'ntp_cluster::default' do
   context 'installs /etc/ntp.conf' do
     describe file '/etc/ntp.conf' do
-      its(:content) { is_expected.to match(/^server _default-ntp-1b\.priv\.evertrue\.com/) }
-      its(:content) { is_expected.to match(/^server _default-ntp-1c\.priv\.evertrue\.com/) }
+      its(:content) { is_expected.to match(/^server 46\.22\.26\.12/) }
+      its(:content) { is_expected.to match(/^server 89\.188\.26\.129/) }
       its(:content) { is_expected.to_not match(/^peer/) }
     end
   end

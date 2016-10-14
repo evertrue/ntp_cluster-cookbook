@@ -6,16 +6,16 @@
   ],
   "automatic": {
     "fqdn": "_default-ntp-1b.priv.evertrue.com",
-    "ipaddress": "169.254.0.1",
+    "ipaddress": "46.22.26.12",
     "ec2": {
       "hostname":"_default-ntp-1b.priv.evertrue.com",
       "local_hostname":"_default-ntp-1b.priv.evertrue.com",
-      "local_ipv4":"169.254.0.1",
+      "local_ipv4":"46.22.26.12",
       "placement_availability_zone":"us-east-1b",
       "userdata":null
     },
     "tags": [
-        "ntp_master"
+      "ntp_master"
     ],
     "recipes": [
     ],

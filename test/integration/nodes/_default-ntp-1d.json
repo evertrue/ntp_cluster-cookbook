@@ -6,11 +6,11 @@
   ],
   "automatic": {
     "fqdn": "_default-ntp-1d.priv.evertrue.com",
-    "ipaddress": "169.254.0.3",
+    "ipaddress": "92.63.212.161",
     "ec2": {
       "hostname":"_default-ntp-1d.priv.evertrue.com",
       "local_hostname":"_default-ntp-1d.priv.evertrue.com",
-      "local_ipv4":"169.254.0.3",
+      "local_ipv4":"92.63.212.161",
       "placement_availability_zone":"us-east-1d",
       "userdata":null
     },

@@ -19,10 +19,10 @@
 pool = search(
   :node,
   "#{node['ntp_cluster']['discovery']} AND chef_environment:#{node.chef_environment}"
-)
+).select { |n| n['fqdn'] && n['ipaddress'] } # Don't count partially provisioned nodes
 
 if pool.any?
-  node.default['ntp_cluster']['pool'] = pool.map { |n| n['fqdn'] }
+  node.default['ntp_cluster']['pool'] = pool.map { |n| n['ipaddress'] }
 else
   log "Could not find any private ntp servers using the search string: '#{discover}'"
 end
@@ -32,11 +32,8 @@ master_nodes = pool.select do |n|
   n['tags'] && n['tags'].include?(node['ntp_cluster']['master_tag'])
 end
 
-masters = master_nodes.map { |n| n['fqdn'] }.compact
+standbys = (pool.map { |n| n['ipaddress'] } - master_nodes.map { |n| n['ipaddress'] })
 
-standbys = (pool.map { |n| n['fqdn'] } - masters).compact
-
-if masters.length > 1
 if master_nodes.length > 1
   Chef::Log.warn(
     "Chef found more than 1 ntp master in this cluster, this is not correct!\n" \
@@ -46,9 +43,8 @@ if master_nodes.length > 1
     "#{master_nodes.map { |n| " * #{n['fqdn']}" }.join "\n"}"
   )
 
-  if masters.include?(node['fqdn'])
-    standbys << node['fqdn']
-    masters.delete node['fqdn']
+  if master_nodes.find { |n| n.name == node.name }
+    standbys << node['ipaddress']
 
     # remove the master tage from this node
     node.normal['tags'] = node['tags'].reject { |t| t == node['ntp_cluster']['master_tag'] }.uniq
@@ -59,16 +55,16 @@ if master_nodes.length > 1
   end
 
   # by default in a multimaster env, the master is the node with the highest fqdn
-  node.override['ntp_cluster']['master'] = masters.max
+  node.override['ntp_cluster']['master'] = master_nodes.reject { |n| n.name == node.name }.max
 
-elsif masters.length == 1
-  log 'Master is ' + masters.first
-  node.override['ntp_cluster']['master'] = masters.first
+elsif master_nodes.length == 1
+  Chef::Log.debug "Master is #{master_nodes.first['fqdn']} [#{master_nodes.first['ipaddress']}]"
+  node.override['ntp_cluster']['master'] = master_nodes.first['ipaddress']
 elsif node.role?(node['ntp_cluster']['server_role'])
   Chef::Log.debug('Server pool contains no masters. Appointing myself.')
   tags = node['tags'] || []
   node.normal['tags'] = tags.push(node['ntp_cluster']['master_tag']).uniq
-  node.override['ntp_cluster']['master'] = node['fqdn']
+  node.override['ntp_cluster']['master'] = node['ipaddress']
 else
   Chef::Log.warn 'No servers detected.'
 end
