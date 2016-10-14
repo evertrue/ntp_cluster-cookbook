@@ -1,5 +1,9 @@
 # ntp_cluster ChangeLog
 
+# 2.0.1
+
+* Remove discover string from log output
+
 # 2.0.0
 
 * Bump ntp cookbook to v3
