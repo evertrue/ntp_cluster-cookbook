@@ -1,5 +1,13 @@
 # ntp_cluster ChangeLog
 
+# 2.0.0
+
+* Bump ntp cookbook to v3
+* Bump cron cookbook to v3
+* Switch to IP addresses for all server config
+* Clean up a lot of the codes
+* Convert node.set to node.override
+
 # 1.1.3
 
 * Add "ntp_master" tag only if the node is eligible for ntp servers (Contributor: [@akadoya](https://github.com/akadoya))
