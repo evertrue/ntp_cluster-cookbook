@@ -22,8 +22,12 @@ include_recipe 'ntp_cluster::discover' if node['ntp_cluster']['discovery']
 if node.role? node['ntp_cluster']['server_role'] # server?
   include_recipe 'ntp_cluster::server'
 else
+  Chef::Log.debug 'NTP: Node is a client'
   include_recipe 'ntp_cluster::client'
 end
+
+Chef::Log.debug("NTP Servers: #{node['ntp']['servers'].inspect}")
+Chef::Log.debug("NTP Peers: #{node['ntp']['peers'].inspect}")
 
 include_recipe 'ntp::default'
 

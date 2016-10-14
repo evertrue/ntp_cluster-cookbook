@@ -16,18 +16,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-discover = "#{node['ntp_cluster']['discovery']} AND chef_environment:#{node.chef_environment}"
 pool = search(
   :node,
-  discover
+  "#{node['ntp_cluster']['discovery']} AND chef_environment:#{node.chef_environment}"
 )
 
 if pool.any?
   node.default['ntp_cluster']['pool'] = pool.map { |n| n['fqdn'] }
 else
-  log(
-    "Could not find any private ntp servers using the search string: '#{discover}'"
-  )
+  log "Could not find any private ntp servers using the search string: '#{discover}'"
 end
 
 # Go through the pool and put the sandbys in the standbys list and masters in the masters list
@@ -40,14 +37,13 @@ masters = master_nodes.map { |n| n['fqdn'] }.compact
 standbys = (pool.map { |n| n['fqdn'] } - masters).compact
 
 if masters.length > 1
-
-  masters_list =  masters.map { |fqdn| " * #{fqdn}" }.join "\n"
-  log(
+if master_nodes.length > 1
+  Chef::Log.warn(
     "Chef found more than 1 ntp master in this cluster, this is not correct!\n" \
     "Only 1 node should be an ntp master for the cluster, otherwise there\n" \
     "will be multiple true times.\n" \
     "Masters are:\n" \
-    "#{masters_list}"
+    "#{master_nodes.map { |n| " * #{n['fqdn']}" }.join "\n"}"
   )
 
   if masters.include?(node['fqdn'])
@@ -58,7 +54,7 @@ if masters.length > 1
     node.normal['tags'] = node['tags'].reject { |t| t == node['ntp_cluster']['master_tag'] }.uniq
 
     if node['tags'].include? 'ntp_master'
-      raise '  > You are overriding me! Please check your overrides for tags attribute'
+      raise 'You are overriding me! Please check your overrides for tags attribute'
     end
   end
 
@@ -69,6 +65,7 @@ elsif masters.length == 1
   log 'Master is ' + masters.first
   node.set['ntp_cluster']['master'] = masters.first
 elsif node.role?(node['ntp_cluster']['server_role'])
+  Chef::Log.debug('Server pool contains no masters. Appointing myself.')
   tags = node['tags'] || []
   node.normal['tags'] = tags.push(node['ntp_cluster']['master_tag']).uniq
   node.set['ntp_cluster']['master'] = node['fqdn']
