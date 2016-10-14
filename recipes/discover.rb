@@ -66,7 +66,7 @@ elsif node.role?(node['ntp_cluster']['server_role'])
   node.normal['tags'] = tags.push(node['ntp_cluster']['master_tag']).uniq
   node.override['ntp_cluster']['master'] = node['ipaddress']
 else
-  Chef::Log.warn 'No servers detected.'
+  raise 'No servers detected.'
 end
 
 node.override['ntp_cluster']['standbys'] = standbys
