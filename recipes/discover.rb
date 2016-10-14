@@ -61,10 +61,8 @@ elsif master_nodes.length == 1
   Chef::Log.debug "Master is #{master_nodes.first['fqdn']} [#{master_nodes.first['ipaddress']}]"
   node.override['ntp_cluster']['master'] = master_nodes.first['ipaddress']
 elsif node.role?(node['ntp_cluster']['server_role'])
-  Chef::Log.debug('Server pool contains no masters. Appointing myself.')
-  tags = node['tags'] || []
-  node.normal['tags'] = tags.push(node['ntp_cluster']['master_tag']).uniq
-  node.override['ntp_cluster']['master'] = node['ipaddress']
+  Chef::Log.debug 'Server pool contains no masters. Appointing myself.'
+  node.normal['tags'] = ((node['tags'] || []) | [node['ntp_cluster']['master_tag']])
 else
   raise 'No servers detected.'
 end
