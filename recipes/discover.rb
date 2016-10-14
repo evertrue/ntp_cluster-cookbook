@@ -61,6 +61,9 @@ elsif master_nodes.length == 1
   Chef::Log.debug "Master is #{master_nodes.first['fqdn']} [#{master_nodes.first['ipaddress']}]"
   node.override['ntp_cluster']['master'] = master_nodes.first['ipaddress']
 elsif node.role?(node['ntp_cluster']['server_role'])
+  # Note that in order to actually test this mode, you must remove the master_tag attribute from
+  # the _default-ntp-1b test node. Otherwise it's skipped over in all serverspec tests.
+
   Chef::Log.debug 'Server pool contains no masters. Appointing myself.'
   node.normal['tags'] = ((node['tags'] || []) | [node['ntp_cluster']['master_tag']])
 else
