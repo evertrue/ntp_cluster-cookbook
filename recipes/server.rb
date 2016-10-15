@@ -16,7 +16,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 if node['tags'].include? node['ntp_cluster']['master_tag'] # master?
   Chef::Log.debug 'NTP: Node is a master server'
   node.override['ntp']['peers'] = []
