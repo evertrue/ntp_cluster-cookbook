@@ -9,8 +9,8 @@ default['ntp_cluster']['public_servers'] = %w(
   3.pool.ntp.org
 )
 
+default['ntp']['servers'] = node['ntp_cluster']['public_servers']
+
 default['ntp_cluster']['verify']['retries'] = 12
 default['ntp_cluster']['verify']['retry_delay'] = 5
-
-override['ntp']['servers'] = node['ntp_cluster']['public_servers']
 override['ntp']['conf_restart_immediate'] = true
