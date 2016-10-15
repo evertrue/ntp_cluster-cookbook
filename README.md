@@ -150,3 +150,21 @@ include_recipe 'ntp_cluster::default'
 ## License and Authors
 
 Author:: EverTrue, Inc. (<devops@evertrue.com>)
+
+## Diagrams
+
+The following diagrams should hopefully clarify the expected behavior of a properly configured cluster
+
+### Normal Operation
+<img width="943" alt="screen shot 2016-09-15 at 5 01 17 pm" src="https://cloud.githubusercontent.com/assets/1410448/18567468/46e5c440-7b66-11e6-849d-129a271a2e73.png">
+
+### Failed Master
+<img width="936" alt="screen shot 2016-09-15 at 5 01 35 pm" src="https://cloud.githubusercontent.com/assets/1410448/18567467/46e54d26-7b66-11e6-87bd-5f70f54281ce.png">
+
+<img width="952" alt="screen shot 2016-09-15 at 5 01 27 pm" src="https://cloud.githubusercontent.com/assets/1410448/18567466/46e521f2-7b66-11e6-9cae-070bb4b9a56f.png">
+
+### Failed Master and 1 Failed Slave
+<img width="951" alt="screen shot 2016-09-15 at 5 01 42 pm" src="https://cloud.githubusercontent.com/assets/1410448/18567464/46dfd1de-7b66-11e6-9b7f-0335258abd6a.png">
+
+### Network Segmentation
+<img width="954" alt="screen shot 2016-09-15 at 5 00 59 pm" src="https://cloud.githubusercontent.com/assets/1410448/18567465/46e460fa-7b66-11e6-9a44-7d85abcd4fb4.png">
