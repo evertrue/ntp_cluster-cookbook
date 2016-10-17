@@ -1,5 +1,9 @@
 # ntp_cluster ChangeLog
 
+# 2.0.2
+
+* Fix client attribute precedence: `s/set/override/`
+
 # 2.0.1
 
 * Remove discover string from log output
