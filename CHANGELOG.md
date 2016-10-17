@@ -1,5 +1,9 @@
 # ntp_cluster ChangeLog
 
+# 2.0.3
+
+* Set ntp cluster master to node IP not whole object
+
 # 2.0.2
 
 * Fix client attribute precedence: `s/set/override/`
