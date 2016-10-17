@@ -54,8 +54,12 @@ if master_nodes.length > 1
     end
   end
 
-  # by default in a multimaster env, the master is the node with the highest fqdn
-  node.override['ntp_cluster']['master'] = master_nodes.reject { |n| n.name == node.name }.max
+  # by default in a multimaster env, the master is the node with the highest name
+  node.override['ntp_cluster']['master'] =
+    master_nodes
+      .reject { |n| n.name == node.name }
+      .sort_by { |n| n.name }
+      .max['ipaddress']
 
 elsif master_nodes.length == 1
   Chef::Log.debug "Master is #{master_nodes.first['fqdn']} [#{master_nodes.first['ipaddress']}]"
