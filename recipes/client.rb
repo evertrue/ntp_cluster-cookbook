@@ -2,7 +2,7 @@
 # Cookbook Name:: ntp_cluster
 # Recipe:: default
 #
-# Copyright 2015 EverTrue, Inc.
+# Copyright 2016 EverTrue, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,7 +16,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-unless node['ntp_cluster']['pool'].empty?
-  node.set['ntp']['servers'] = node['ntp_cluster']['pool']
-  node.set['ntp']['server']['prefer'] = node['ntp_cluster']['master']
-end
+raise 'No servers in the pool!' if node['ntp_cluster']['pool'].empty?
+
+Chef::Log.debug("NTP Pool: #{node['ntp_cluster']['pool'].inspect}")
+
+node.override['ntp']['servers'] = node['ntp_cluster']['pool']
+node.override['ntp']['server']['prefer'] = node['ntp_cluster']['master']
