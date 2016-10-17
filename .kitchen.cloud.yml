@@ -27,14 +27,14 @@ suites:
   - name: default
     driver_config:
       tags:
-        Name: ntp_cluster-default-ubuntu-1404
+        Name: ntp-cluster-default-ubuntu-1404
     run_list:
       - recipe[ntp_cluster::default]
 
   - name: server
     driver_config:
       tags:
-        Name: ntp_cluster-server-ubuntu-1404
+        Name: ntp-cluster-server-ubuntu-1404
     run_list:
       - role[ntp_server]
       - recipe[ntp_cluster::default]
