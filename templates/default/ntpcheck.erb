@@ -1,13 +1,13 @@
-#! /bin/bash
+#!/usr/bin/env bash
 
-if ntpq -p | egrep -v "\*<%= node['ntp_cluster']['master'] %>"; then
+if ! ntpq -pn | egrep -q "\*<%= node['ntp_cluster']['master'] %>"; then
+  echo "Host <%= node['ntp_cluster']['master'] %> missing from output of ntpq -pn"
   exit 1
 fi
+<% node['ntp_cluster']['standbys'].each do |standby| -%>
 
-<% node['ntp_cluster']['standbys'].each do |standby| %>
-if ntpq -p | egrep -v "(\+|\#)<%= standby %>"; then
+if ! ntpq -pn | egrep -q "(\+|\#)<%= standby %>"; then
+  echo "Host <%= standby %> missing from output of ntpq -pn"
   exit 1
 fi
-<% end %>
-
-exit 0
+<% end -%>

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'ntp_cluster::server' do
+describe 'ntp_cluster::default' do
   context 'installs /etc/ntp.conf' do
     describe file '/etc/ntp.conf' do
       ip_address = Socket.ip_address_list.detect{|intf| intf.ipv4_private?}.ip_address
@@ -35,6 +35,10 @@ restrict -6 #{ip6_address} mask  nomodify notrap" }
       its(:content) { is_expected.to match(/\*46\.22\.26\.12/) }
       its(:content) { is_expected.to match(/\(\\\+|\\\#\)89\.188\.26\.129/) }
       its(:content) { is_expected.to match(/\(\\\+|\\\#\)92\.63\.212\.161/) }
+    end
+
+    describe command '/usr/bin/ntpcheck' do
+      its(:exit_status) { is_expected.to be 0 }
     end
   end
 
