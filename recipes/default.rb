@@ -16,18 +16,43 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-include_recipe 'apt'
-include_recipe 'ntp_cluster::discover' if node['ntp_cluster']['discovery']
 
-if node.role? node['ntp_cluster']['server_role'] # server?
-  include_recipe 'ntp_cluster::server'
-else
-  Chef::Log.debug 'NTP: Node is a client'
-  include_recipe 'ntp_cluster::client'
+if node.recipes.include? 'et_ntp_client::default'
+  raise 'Please remove ntp_cluster::server from the run list. These cookbooks cannot co-exist.'
+end
+
+include_recipe 'apt'
+include_recipe 'ntp_cluster::discover'
+
+if node['tags'].include? 'ntp_master' # MASTER
+  Chef::Log.debug 'NTP: Node is a master server'
+  node.override['ntp']['peers']   = []
+  node.override['ntp']['servers'] = node['ntp_cluster']['public_servers']
+else # STANDBY
+  Chef::Log.debug 'NTP: Node is a standby server'
+  node.override['ntp']['peers']            = node['ntp_cluster']['standbys']
+  node.override['ntp']['servers']          = [node['ntp_cluster']['master']]
+  node.override['ntp']['server']['prefer'] = node['ntp_cluster']['master']
+
+  Chef::Log.debug("NTP Peers: #{node['ntp']['peers'].inspect}")
+  
+  include_recipe 'ntp_cluster::monitor'
 end
 
 Chef::Log.debug("NTP Servers: #{node['ntp']['servers'].inspect}")
-Chef::Log.debug("NTP Peers: #{node['ntp']['peers'].inspect}")
+
+# Open up the interfaces to the network
+node.override['ntp']['restrictions'] = node['network']['interfaces'].map do |_interface, config|
+  config['addresses'].map do |address, details|
+    cmd = "#{address} mask #{details['netmask']} nomodify notrap"
+    case details['family']
+    when 'inet6'
+      "-6 #{cmd}"
+    when 'inet'
+      cmd
+    end
+  end
+end.flatten.compact.uniq
 
 include_recipe 'ntp::default'
 

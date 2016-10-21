@@ -1,0 +1,18 @@
+{
+  "name": "dev2-ntp-1d",
+  "chef_environment": "dev2",
+  "run_list": [
+    "recipe[ntp_cluster]",
+    "role[ntp_server]"
+  ],
+  "normal": {
+    "tags": [
+    ]
+  },
+  "automatic": {
+    "ipaddress": "92.63.212.161",
+    "roles": [
+      "ntp_server"
+    ]
+  }
+}

@@ -16,65 +16,52 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+search_string = "#{node['ntp_cluster']['discovery']} AND chef_environment:#{node.chef_environment}"
+
 pool = search(
   :node,
-  "#{node['ntp_cluster']['discovery']} AND chef_environment:#{node.chef_environment}"
-).select { |n| n['fqdn'] && n['ipaddress'] } # Don't count partially provisioned nodes
+  search_string,
+  filter_result: {
+    'name' => %w(name),
+    'ipaddress' => %w(ipaddress),
+    'tags' => %w(tags)
+  }
+).select { |n| n['ipaddress'] } # Don't count partially provisioned nodes
 
 if pool.any?
-  node.default['ntp_cluster']['pool'] = pool.map { |n| n['ipaddress'] }
+  Chef::Log.debug "NTP server pool: #{pool.inspect}"
 else
-  log "Could not find any private ntp servers"
+  Chef::Log.warn "Could not find any private NTP servers using search string: #{search_string}"
 end
 
 # Go through the pool and put the sandbys in the standbys list and masters in the masters list
-master_nodes = pool.select do |n|
-  n['tags'] && n['tags'].include?(node['ntp_cluster']['master_tag'])
-end
-
-standbys = (pool.map { |n| n['ipaddress'] } - master_nodes.map { |n| n['ipaddress'] })
+master_nodes = pool.select { |n| n['tags'].include? 'ntp_master' }
+standby_ips  = (pool - master_nodes).map { |n| n['ipaddress'] }
 
 if master_nodes.length > 1
-  Chef::Log.warn(
-    "Chef found more than 1 ntp master in this cluster, this is not correct!\n" \
-    "Only 1 node should be an ntp master for the cluster, otherwise there\n" \
-    "will be multiple true times.\n" \
-    "Masters are:\n" \
-    "#{master_nodes.map { |n| " * #{n['fqdn']}" }.join "\n"}"
-  )
-
-  if master_nodes.find { |n| n.name == node.name }
-    standbys << node['ipaddress']
-
-    # remove the master tage from this node
-    node.normal['tags'] = node['tags'].reject { |t| t == node['ntp_cluster']['master_tag'] }.uniq
-
-    if node['tags'].include? 'ntp_master'
-      raise 'You are overriding me! Please check your overrides for tags attribute'
-    end
-  end
+  Chef::Log.warn 'NTP: Multiple masters were found. Selecting a single one.'
 
   # by default in a multimaster env, the master is the node with the highest name
-  node.override['ntp_cluster']['master'] =
-    master_nodes
-      .reject { |n| n.name == node.name }
-      .sort_by { |n| n.name }
-      .max['ipaddress']
+  node.override['ntp_cluster']['master'] = master_nodes.sort_by { |n| n['name'] }.max['ipaddress']
 
+  # If the highest name doesn't turn out to be us, and we have a master tag, remove it and
+  # set us as a standby
+  if node['tags'].include?('ntp_master') && node['ntp_cluster']['master'] != node['ipaddress']
+    node.normal['tags'] = node['tags'] - %w(ntp_master)
+    standby_ips << node['ipaddress']
+  end
 elsif master_nodes.length == 1
-  Chef::Log.debug "Master is #{master_nodes.first['fqdn']} [#{master_nodes.first['ipaddress']}]"
   node.override['ntp_cluster']['master'] = master_nodes.first['ipaddress']
-elsif node.role?(node['ntp_cluster']['server_role'])
+else
   # Note that in order to actually test this mode, you must remove the master_tag attribute from
   # the _default-ntp-1b test node. Otherwise it's skipped over in all serverspec tests.
 
   Chef::Log.debug 'Server pool contains no masters. Appointing myself.'
-  node.normal['tags'] = ((node['tags'] || []) | [node['ntp_cluster']['master_tag']])
-else
-  raise 'No servers detected.'
+  node.normal['tags'] = (node['tags'] | %w(ntp_master))
+  node.override['ntp_cluster']['master'] = node['ipaddress']
 end
 
-node.override['ntp_cluster']['standbys'] = standbys
+node.override['ntp_cluster']['standbys'] = standby_ips
 
 Chef::Log.info " > Tags: #{node['tags'].inspect}"
 Chef::Log.info " > Master Server: #{node['ntp_cluster']['master'].inspect}"

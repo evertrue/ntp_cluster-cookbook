@@ -1,7 +1,5 @@
 default['ntp_cluster']['server_role'] = 'ntp_server'
 
-default['ntp_cluster']['pool'] = []
-
 default['ntp_cluster']['public_servers'] = %w(
   0.pool.ntp.org
   1.pool.ntp.org
