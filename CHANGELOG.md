@@ -1,5 +1,9 @@
 # ntp_cluster ChangeLog
 
+# 3.0.0
+
+* **BREAKING:** Refactor to remove the client functionality
+
 # 2.0.3
 
 * Set ntp cluster master to node IP not whole object
